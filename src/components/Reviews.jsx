@@ -1,0 +1,1 @@
+// This component has been removed and its functionality consolidated into TrustBadges.jsx
