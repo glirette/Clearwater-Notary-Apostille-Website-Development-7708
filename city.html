@@ -499,9 +499,15 @@ const cityName = cityParam.replace(/-/g, ' ')
 // Update page title
 document.title = `${cityName} FL Apostille Services | The Florida Apostille`;
 
-// Update all elements with class 'city-name'
+// Update all elements with class 'city-name' - NO SPECIAL STYLING
 const cityElements = document.querySelectorAll('.city-name');
 cityElements.forEach(el => {
+// Ensure city names appear completely natural with no special styling
+el.style.color = 'inherit';
+el.style.fontWeight = 'inherit';
+el.style.fontStyle = 'inherit';
+el.style.textDecoration = 'inherit';
+el.style.background = 'inherit';
 el.textContent = cityName;
 });
 

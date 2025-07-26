@@ -1,60 +1,30 @@
 import React from 'react';
-import {useParams,Link} from 'react-router-dom';
-import {Helmet} from 'react-helmet-async';
+import { useParams, Link } from 'react-router-dom';
+import { Helmet } from 'react-helmet-async';
 import TrustSignals from '../components/TrustSignals';
+import { getCityData } from '../utils/cityData';
+import ProcessingTimeComparison from '../components/ProcessingTimeComparison';
 
-const CityPage=()=> {
-  const {cityName}=useParams();
-  const displayName=cityName.replace(/-/g,' ').replace(/\b\w/g,l=> l.toUpperCase());
-
-  const cityData={
-    'jacksonville': {
-      population: '922,230',
-      description: 'Jacksonville,Florida\'s largest city,benefits from our statewide apostille services with secure online notarization through the Notary Geek platform.',
-      landmarks: ['Jacksonville Landing','Cummer Museum','Jacksonville Zoo'],
-      businessDistricts: ['Downtown Jacksonville','Southside','Westside']
-    },
-    'miami': {
-      population: '467,963',
-      description: 'Miami\'s international business community relies on our Florida-approved online notarization and rapid apostille processing services.',
-      landmarks: ['Art Deco District','Wynwood Walls','Bayfront Park'],
-      businessDistricts: ['Downtown Miami','Brickell','Coral Gables']
-    },
-    'tampa': {
-      population: '399,700',
-      description: 'Tampa residents and businesses access our comprehensive apostille services through our state-approved online platform.',
-      landmarks: ['Tampa Riverwalk','Ybor City','Tampa Theatre'],
-      businessDistricts: ['Downtown Tampa','Westshore','Hyde Park']
-    },
-    'orlando': {
-      population: '307,573',
-      description: 'Orlando\'s diverse economy benefits from our streamlined online notarization and express apostille processing services.',
-      landmarks: ['Walt Disney World','Universal Studios','Lake Eola'],
-      businessDistricts: ['Downtown Orlando','International Drive','Airport District']
-    }
-  };
-
-  const currentCity=cityData[cityName] || {
-    population: 'N/A',
-    description: `${displayName},Florida residents can access our comprehensive apostille services through our Florida-approved online notarization platform.`,
-    landmarks: [],
-    businessDistricts: []
-  };
+const CityPage = () => {
+  const { cityName } = useParams();
+  const cityData = getCityData(cityName);
+  const displayName = cityData.name || cityName.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
 
   return (
     <>
       <Helmet>
-        <title>{displayName} FL Apostille Services | Florida Apostille App | Foreign Signers Welcome</title>
-        <meta name="description" content={`${displayName} FL apostille services through Florida-approved Notary Geek platform. Foreign signers welcome - No Social Security Number required. Professional intermediary service for government apostilles. Start now.`} />
-        <meta name="keywords" content={`${displayName} apostille,Florida apostille services,${displayName} notary,online notarization ${displayName},Notary Geek Florida,${displayName} document authentication,foreign signers welcome,no SSN required,LLC documents,apostille intermediary`} />
+        <title>{cityData.metaTitle || `${displayName} FL Apostille Services | Florida Apostille App | Foreign Signers Welcome`}</title>
+        <meta name="description" content={cityData.metaDescription} />
+        <meta name="keywords" content={`${displayName} apostille, Florida apostille services, ${displayName} notary, online notarization ${displayName}, Notary Geek Florida, ${displayName} document authentication, foreign signers welcome, no SSN required, LLC documents, apostille intermediary`} />
         <link rel="canonical" href={`https://floridaapostille.app/city/${cityName}`} />
-        
+
+        {/* Schema.org structured data for Local Business */}
         <script type="application/ld+json">
           {JSON.stringify({
             "@context": "https://schema.org",
             "@type": "LocalBusiness",
             "name": `Florida Apostille App - ${displayName}`,
-            "description": `Florida-approved apostille and online notarization services serving ${displayName},Florida. Foreign signers welcome - No Social Security Number required. Professional intermediary for government apostille services.`,
+            "description": `Florida-approved apostille and online notarization services serving ${displayName}, Florida. Foreign signers welcome - No Social Security Number required. Professional intermediary for government apostille services.`,
             "address": {
               "@type": "PostalAddress",
               "addressLocality": displayName,
@@ -69,7 +39,7 @@ const CityPage=()=> {
             },
             "serviceType": [
               "Apostille Services",
-              "Online Notarization", 
+              "Online Notarization",
               "Document Authentication",
               "Foreign Signer Services"
             ],
@@ -81,7 +51,8 @@ const CityPage=()=> {
             "slogan": "Foreign signers welcome • No Social Security Number required"
           })}
         </script>
-        
+
+        {/* FAQ Schema */}
         <script type="application/ld+json">
           {JSON.stringify({
             "@context": "https://schema.org",
@@ -96,7 +67,7 @@ const CityPage=()=> {
                 }
               },
               {
-                "@type": "Question", 
+                "@type": "Question",
                 "name": "What is your role in the apostille process?",
                 "acceptedAnswer": {
                   "@type": "Answer",
@@ -150,10 +121,7 @@ const CityPage=()=> {
                 </div>
 
                 <div className="flex flex-col sm:flex-row gap-4 mb-8">
-                  <Link
-                    to="/form"
-                    className="bg-orange-500 text-white px-8 py-4 rounded-full font-semibold hover:bg-orange-600 transition-colors text-center"
-                  >
+                  <Link to="/form" className="bg-orange-500 text-white px-8 py-4 rounded-full font-semibold hover:bg-orange-600 transition-colors text-center">
                     Start Online Notarization
                   </Link>
                   <div className="border-2 border-white text-white px-8 py-4 rounded-full font-semibold text-center bg-white/10 backdrop-blur-sm">
@@ -176,15 +144,15 @@ const CityPage=()=> {
                   </div>
                 </div>
               </div>
-              
+
               <div className="flex justify-center">
-                <div className="relative w-full rounded-2xl shadow-2xl overflow-hidden" style={{paddingBottom: '56.25%'}}>
+                <div className="relative w-full rounded-2xl shadow-2xl overflow-hidden" style={{ paddingBottom: '56.25%' }}>
                   <iframe
                     className="absolute top-0 left-0 w-full h-full"
                     src="https://www.youtube.com/embed/zAj1vU1QOj8"
                     title={`Florida Apostille Services in ${displayName} - Powered by Notary Geek`}
                     frameBorder="0"
-                    allow="accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;picture-in-picture"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                     allowFullScreen
                   ></iframe>
                 </div>
@@ -195,23 +163,38 @@ const CityPage=()=> {
 
         <TrustSignals />
 
+        {/* Processing Time Comparison Section */}
+        <section className="py-16 bg-gradient-to-br from-blue-50 to-blue-100">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="text-center mb-12">
+              <h2 className="text-3xl font-bold text-gray-900 mb-4">
+                Current Processing Times in {displayName}
+              </h2>
+              <div className="w-24 h-1 bg-gradient-to-r from-blue-600 to-orange-500 mx-auto mb-6"></div>
+              <p className="text-lg text-gray-600 max-w-3xl mx-auto">
+                See how much time you can save with our professional intermediary service
+              </p>
+            </div>
+
+            <ProcessingTimeComparison />
+          </div>
+        </section>
+
         {/* Transparent Pricing Section */}
         <section className="py-16 bg-blue-50">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-12">
               <h2 className="text-3xl font-bold text-gray-900 mb-4">Transparent Pricing & Service Model</h2>
               <div className="w-24 h-1 bg-gradient-to-r from-blue-600 to-orange-500 mx-auto mb-6"></div>
+
               <div className="bg-white rounded-xl p-8 max-w-4xl mx-auto shadow-lg">
                 <div className="mb-6">
                   <h3 className="text-xl font-semibold text-gray-900 mb-3">Our Role as Professional Intermediary</h3>
                   <p className="text-gray-700 text-lg leading-relaxed">
-                    <strong>Important:</strong> While the Florida Secretary of State issues apostilles directly for $10, 
-                    we provide comprehensive professional service including online notarization, document preparation, 
-                    hand-carrying to government offices, and secure worldwide shipping. We also obtain apostilles for 
-                    other states including California, New Mexico, Wyoming, and New York City area.
+                    <strong>Important:</strong> While the Florida Secretary of State issues apostilles directly for $10, we provide comprehensive professional service including online notarization, document preparation, hand-carrying to government offices, and secure worldwide shipping. We also obtain apostilles for other states including California, New Mexico, Wyoming, and New York City area.
                   </p>
                 </div>
-                
+
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                   <div className="bg-gradient-to-br from-blue-600 to-blue-700 text-white p-6 rounded-xl">
                     <h4 className="text-xl font-bold mb-4">🇺🇸 US Shipping (FedEx 2nd Day)</h4>
@@ -221,7 +204,7 @@ const CityPage=()=> {
                       <p className="text-sm opacity-90">Same package delivery</p>
                     </div>
                   </div>
-                  
+
                   <div className="bg-gradient-to-br from-orange-500 to-orange-600 text-white p-6 rounded-xl">
                     <h4 className="text-xl font-bold mb-4">🌍 International Shipping</h4>
                     <div className="space-y-2">
@@ -231,11 +214,10 @@ const CityPage=()=> {
                     </div>
                   </div>
                 </div>
-                
+
                 <div className="mt-6 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
                   <p className="text-sm text-gray-700">
-                    <strong>Note:</strong> Pricing for non-Florida state documents varies. 
-                    We specialize in California, New Mexico, Wyoming, and New York City area processing.
+                    <strong>Note:</strong> Pricing for non-Florida state documents varies. We specialize in California, New Mexico, Wyoming, and New York City area processing.
                   </p>
                 </div>
               </div>
@@ -252,13 +234,24 @@ const CityPage=()=> {
                   Florida Apostille App Services for {displayName}
                 </h2>
                 <p className="text-lg text-gray-700 mb-6 leading-relaxed">
-                  {currentCity.description}
+                  {cityData.description}
                 </p>
                 <p className="text-gray-700 mb-8">
-                  Our Florida-approved platform ensures your documents are processed securely and efficiently. 
-                  Whether you need apostilles for business contracts, educational transcripts, birth certificates, 
-                  or other important documents, our streamlined intermediary service delivers results with our 2-day processing target.
+                  Our Florida-approved platform ensures your documents are processed securely and efficiently. Whether you need apostilles for business contracts, educational transcripts, birth certificates, or other important documents, our streamlined intermediary service delivers results with our 2-day processing target.
                 </p>
+
+                {/* Testimonial if available */}
+                {cityData.testimonial && (
+                  <div className="bg-blue-50 border-l-4 border-blue-500 p-5 rounded-r-lg mb-8">
+                    <p className="text-gray-700 italic mb-3">"{cityData.testimonial.text}"</p>
+                    <p className="text-blue-700 font-semibold">— {cityData.testimonial.author}</p>
+                    <div className="flex text-yellow-400 mt-2">
+                      {[...Array(cityData.testimonial.rating)].map((_, i) => (
+                        <span key={i}>★</span>
+                      ))}
+                    </div>
+                  </div>
+                )}
 
                 <div className="bg-white p-6 rounded-lg shadow-md">
                   <h3 className="text-xl font-semibold text-gray-900 mb-4">
@@ -300,14 +293,14 @@ const CityPage=()=> {
                   </ul>
                 </div>
               </div>
-              
+
               <div>
                 <div className="bg-white p-6 rounded-lg shadow-md mb-6">
                   <h3 className="text-xl font-semibold text-gray-900 mb-4">City Information</h3>
                   <div className="space-y-3">
                     <div>
                       <span className="font-medium text-gray-700">Population:</span>
-                      <span className="ml-2 text-gray-600">{currentCity.population}</span>
+                      <span className="ml-2 text-gray-600">{cityData.population || 'N/A'}</span>
                     </div>
                     <div>
                       <span className="font-medium text-gray-700">State:</span>
@@ -321,6 +314,30 @@ const CityPage=()=> {
                       <span className="font-medium text-gray-700">Service Type:</span>
                       <span className="ml-2 text-gray-600">Professional Intermediary</span>
                     </div>
+
+                    {/* Show landmarks if available */}
+                    {cityData.landmarks && cityData.landmarks.length > 0 && (
+                      <div>
+                        <span className="font-medium text-gray-700">Notable Landmarks:</span>
+                        <ul className="mt-1 ml-5 list-disc text-gray-600 text-sm">
+                          {cityData.landmarks.map((landmark, index) => (
+                            <li key={index}>{landmark}</li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
+
+                    {/* Show business districts if available */}
+                    {cityData.businessDistricts && cityData.businessDistricts.length > 0 && (
+                      <div>
+                        <span className="font-medium text-gray-700">Business Districts:</span>
+                        <ul className="mt-1 ml-5 list-disc text-gray-600 text-sm">
+                          {cityData.businessDistricts.map((district, index) => (
+                            <li key={index}>{district}</li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
                   </div>
                 </div>
 
@@ -330,10 +347,7 @@ const CityPage=()=> {
                     Access our Florida-approved online notarization platform and get your apostille process started immediately.
                   </p>
                   <div className="space-y-3">
-                    <Link
-                      to="/form"
-                      className="block bg-orange-500 text-center py-3 rounded-lg font-semibold hover:bg-orange-600 transition-colors"
-                    >
+                    <Link to="/form" className="block bg-orange-500 text-center py-3 rounded-lg font-semibold hover:bg-orange-600 transition-colors">
                       Start Now
                     </Link>
                     <div className="text-center text-sm text-blue-200">
@@ -352,7 +366,7 @@ const CityPage=()=> {
             <h2 className="text-3xl font-bold text-center text-gray-900 mb-12">
               Our {displayName} Services
             </h2>
-            
+
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               <div className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow">
                 <div className="text-4xl mb-4">📋</div>
@@ -406,16 +420,14 @@ const CityPage=()=> {
             <h2 className="text-3xl font-bold text-center text-gray-900 mb-12">
               Frequently Asked Questions - {displayName}
             </h2>
-            
+
             <div className="space-y-6">
               <div className="bg-white p-6 rounded-lg shadow-md">
                 <h3 className="text-lg font-semibold text-gray-900 mb-2">
                   How do I access the Florida Apostille App services from {displayName}?
                 </h3>
                 <p className="text-gray-600">
-                  Simply visit our website to access our Florida-approved Notary Geek platform. You can complete your 
-                  online notarization and apostille request entirely online. We serve as a professional intermediary 
-                  to obtain government apostilles.
+                  Simply visit our website to access our Florida-approved Notary Geek platform. You can complete your online notarization and apostille request entirely online. We serve as a professional intermediary to obtain government apostilles.
                 </p>
               </div>
 
@@ -424,10 +436,7 @@ const CityPage=()=> {
                   What is your role in the apostille process?
                 </h3>
                 <p className="text-gray-600">
-                  We are a professional intermediary service. While the Florida Secretary of State issues apostilles 
-                  directly for $10, we provide comprehensive service including online notarization, document preparation, 
-                  hand-carrying to government offices, and worldwide shipping. We also handle processing for all states, 
-                  with specialization in California, New Mexico, Wyoming, and the New York City area.
+                  We are a professional intermediary service. While the Florida Secretary of State issues apostilles directly for $10, we provide comprehensive service including online notarization, document preparation, hand-carrying to government offices, and worldwide shipping. We also handle processing for all states, with specialization in California, New Mexico, Wyoming, and the New York City area.
                 </p>
               </div>
 
@@ -436,8 +445,7 @@ const CityPage=()=> {
                   Do I need a Social Security Number to use your services?
                 </h3>
                 <p className="text-gray-600">
-                  No. Our platform welcomes foreign signers and international clients. You can complete your online 
-                  notarization without a US Social Security Number. We accept passports for signers overseas.
+                  No. Our platform welcomes foreign signers and international clients. You can complete your online notarization without a US Social Security Number. We accept passports for signers overseas.
                 </p>
               </div>
 
@@ -446,9 +454,7 @@ const CityPage=()=> {
                   What are your pricing and turnaround times?
                 </h3>
                 <p className="text-gray-600">
-                  For Florida documents: $300 for international shipping (single document), $230 for US shipping 
-                  (FedEx 2nd day). Additional documents in the same package are $60 each. We aim for 2-day processing. 
-                  Pricing for non-Florida states varies, with specialization in CA, NM, WY, and NYC area.
+                  For Florida documents: $300 for international shipping (single document), $230 for US shipping (FedEx 2nd day). Additional documents in the same package are $60 each. We aim for 2-day processing. Pricing for non-Florida states varies, with specialization in CA, NM, WY, and NYC area.
                 </p>
               </div>
 
@@ -457,8 +463,7 @@ const CityPage=()=> {
                   Is the Notary Geek platform approved for use in Florida?
                 </h3>
                 <p className="text-gray-600">
-                  Yes! The Notary Geek platform is fully approved by the state of Florida for remote online notarization 
-                  services, ensuring your documents are legally valid.
+                  Yes! The Notary Geek platform is fully approved by the state of Florida for remote online notarization services, ensuring your documents are legally valid.
                 </p>
               </div>
             </div>
