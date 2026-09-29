@@ -5,11 +5,12 @@ const menuToggle = document.querySelector('.menu-toggle');
 const navMenu = document.querySelector('.nav-menu');
 
 if (menuToggle && navMenu) {
-menuToggle.addEventListener('click', function() {
-navMenu.classList.toggle('active');
-// Animate hamburger to X
+const setMenuOpen = function(open) {
+navMenu.classList.toggle('active', open);
+menuToggle.setAttribute('aria-expanded', String(open));
+menuToggle.setAttribute('aria-label', open ? 'Close navigation' : 'Open navigation');
 const spans = menuToggle.querySelectorAll('span');
-if (navMenu.classList.contains('active')) {
+if (open) {
 spans[0].style.transform = 'rotate(45deg) translate(5px, 5px)';
 spans[1].style.opacity = '0';
 spans[2].style.transform = 'rotate(-45deg) translate(5px, -5px)';
@@ -18,23 +19,22 @@ spans[0].style.transform = 'none';
 spans[1].style.opacity = '1';
 spans[2].style.transform = 'none';
 }
+};
+menuToggle.addEventListener('click', function() {
+setMenuOpen(!navMenu.classList.contains('active'));
 });
+document.addEventListener('keydown', function(event) {
+if (event.key === 'Escape' && navMenu.classList.contains('active')) {
+setMenuOpen(false);
+menuToggle.focus();
 }
-
-// Close menu when clicking on a link
-document.querySelectorAll('.nav-menu a').forEach(link => {
+});
+navMenu.querySelectorAll('a').forEach(link => {
 link.addEventListener('click', function() {
-if (navMenu) {
-navMenu.classList.remove('active');
-if (menuToggle) {
-const spans = menuToggle.querySelectorAll('span');
-spans[0].style.transform = 'none';
-spans[1].style.opacity = '1';
-spans[2].style.transform = 'none';
-}
-}
+setMenuOpen(false);
 });
 });
+}
 
 // Header scroll effect
 const header = document.querySelector('.header');
@@ -127,8 +127,9 @@ const urlParams = new URLSearchParams(window.location.search);
 const cityParam = urlParams.get('city');
 
 if (cityParam) {
-const cityName = cityParam.replace(/-/g, ' ')
-.replace(/\b\w/g, l => l.toUpperCase());
+const cityName = cityParam === 'st-petersburg'
+? 'St. Petersburg'
+: cityParam.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
 
 document.title = `${cityName} FL Apostille Services | The Florida Apostille`;
 
